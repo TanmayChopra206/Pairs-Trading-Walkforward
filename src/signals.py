@@ -59,7 +59,7 @@ def compute_zscore(spread: pd.Series, lookback: int) -> pd.Series:
 
     Implementation detail:
     - rolling mean/std computed including current point by default,
-      but we shift by 1 to ensure we use *past-only* statistics.
+      but we shift by 1 to ensure we use past-only statistics.
     """
     rolling_mean = spread.rolling(lookback).mean().shift(1)
     rolling_std = spread.rolling(lookback).std(ddof=1).shift(1)
