@@ -1,107 +1,88 @@
-Statistical Pairs Trading with Walk-Forward Validation (US Banks)
-Overview
+# Statistical Pairs Trading with Walk-Forward Validation (US Banks)
 
-This project implements a full end-to-end statistical pairs trading framework on US bank equities, with a strong emphasis on out-of-sample robustness and realistic assumptions.
+A **process-driven statistical arbitrage framework** designed to study **mean-reversion robustness, regime dependence, and failure modes** in US bank equities using strict out-of-sample validation.
 
-Rather than optimising for in-sample profitability, the goal is to understand when and why statistical arbitrage works — and when it fails.
+---
 
-Methodology
-1. Data
+## Project Overview
 
-Daily adjusted close prices for large US banks (e.g. BAC, JPM, PNC, USB, TFC)
+This project implements a full pairs trading pipeline with an emphasis on **realistic deployment constraints** rather than in-sample performance optimisation.  
+The objective is not to maximise Sharpe in hindsight, but to understand **when and why relative-value signals work — and when they break**.
 
-Source: Yahoo Finance (yfinance)
+---
 
-Log-price modelling throughout
+##  Methodology
 
-2. Pair Selection (Training Window)
+### 1. Data & Universe
+- **Universe:** Large-cap US banks (e.g. `JPM`, `BAC`, `PNC`, `USB`, `TFC`)
+- **Frequency:** Daily adjusted close prices
+- **Source:** `yfinance`
+- **Transformation:** Log-prices used throughout to stabilise relative dynamics
 
-Pairs are selected dynamically using:
+---
 
-Minimum correlation threshold
+### 2. Pair Selection
+Pairs are selected during each training window using:
 
-Cointegration testing (ADF on residuals)
+- **Correlation filtering** to ensure shared market drivers
+- **Cointegration testing (ADF)** on regression residuals
+- **Mean-reversion speed constraints** via half-life estimation
+- **Ranking** by statistical quality and stability metrics
 
-Mean-reversion half-life constraints
+All selection criteria are **re-estimated at each walk-forward step** to avoid parameter leakage.
 
-This ensures selected pairs are statistically justified rather than visually appealing.
+---
 
-3. Signal Generation
+### 3. Signal Construction
+- Hedge ratios estimated via linear regression
+- Spread normalised using rolling z-scores
+- Entry/exit rules defined symmetrically around zero
+- Signals are **lagged by one day** to prevent look-ahead bias
 
-For each selected pair:
+---
 
-Hedge ratio estimated via linear regression on log prices
+### 4. Backtesting & Execution Assumptions
+- Equal-weight allocation across selected pairs
+- Dollar-neutral construction at the pair level
+- Transaction costs applied in basis points per unit turnover
+- P&L aggregated both **per-pair** and **portfolio-level**
 
-Spread constructed as log-price residual
+---
 
-Rolling z-score computed
+### 5. Walk-Forward Validation
+A rolling validation framework is used to assess robustness:
 
-Entry/exit signals generated using symmetric thresholds
+- **Training window:** 3 years (expanding)
+- **Test window:** 1 year (rolling)
+- **Re-selection:** Pairs and parameters re-estimated at each fold
 
-Positions lagged by one day to avoid look-ahead bias
+This structure explicitly tests performance under **structural breaks and regime shifts**.
 
-4. Backtesting
+---
 
-Spread-based portfolio returns
+## Key Findings
 
-Explicit transaction costs (bps per unit turnover)
+- **Strong regime dependence:** Mean-reversion is unreliable in trending, low-volatility environments
+- **Crisis sensitivity:** Relative-value signals perform best during dislocations (e.g. 2020)
+- **Transaction costs dominate:** Many statistically “clean” signals fail after realistic frictions
+- **Low hit-rate strategies can still work**, but only when drawdowns are controlled
 
-No re-optimisation during test periods
+Overall, the strategy behaves more like a **relative-value hedge** than a consistent alpha source.
 
-Performance evaluated using PnL, Sharpe ratio, drawdowns, and hit rate
+---
 
-5. Portfolio Construction
+##  Limitations & Next Steps
 
-Top-N selected pairs traded simultaneously
+- Pair stability degrades significantly outside stress regimes
+- Static thresholds struggle in changing volatility environments
+- Next extensions:
+  - Volatility-scaled position sizing
+  - Regime classification filters
+  - Cross-sector relative-value expansion
 
-Equal-weight aggregation of pair returns
+---
 
-Diversification effects explicitly analysed
-
-6. Walk-Forward Validation
-
-Expanding training window (3 years)
-
-Rolling test window (1 year)
-
-Parameters re-estimated at each step
-
-Portfolio returns stitched across folds to produce a single out-of-sample equity curve
-
-This eliminates look-ahead bias and highlights regime dependence.
-
-Key Findings
-
-Mean-reversion signals are not stable across regimes
-
-Strategy underperforms during calm, trending markets
-
-Performance improves significantly during market dislocations (e.g. 2020 crisis)
-
-Portfolio diversification reduces drawdowns but does not eliminate regime risk
-
-Transaction costs materially impact short-horizon statistical strategies
-
-Overall, the strategy behaves more like a relative-value crisis alpha than a steady carry trade.
-
-Conclusion
-
-This project demonstrates that statistically sound signals do not guarantee persistent profitability. Robust research requires:
-
-Walk-forward validation
-
-Honest treatment of costs
-
-Explicit analysis of failure modes
-
-The framework prioritises process correctness over headline Sharpe ratios.
-
-Technologies
-
-Python (NumPy, pandas, statsmodels)
-
-yfinance
-
-matplotlib
-
-Modular research architecture
+## Technologies
+- **Python:** pandas, NumPy, statsmodels
+- **Data:** yfinance
+- **Visualisation:** matplotlib, seaborn
