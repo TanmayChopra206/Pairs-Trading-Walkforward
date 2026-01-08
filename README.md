@@ -1,6 +1,6 @@
 # Statistical Pairs Trading with Walk-Forward Validation (US Banks)
 
-A **process-driven statistical arbitrage framework** designed to study **mean-reversion robustness, regime dependence, and failure modes** in US bank equities using strict out-of-sample validation.
+A **statistical arbitrage framework** designed to study **mean-reversion robustness, regime dependence, and failure modes** in US bank equities using strict out-of-sample validation.
 
 ---
 
