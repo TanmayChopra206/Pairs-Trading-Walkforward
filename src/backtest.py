@@ -1,4 +1,4 @@
-# src/backtest.py
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -20,7 +20,7 @@ class BacktestConfig:
         long A, short beta * B when position = +1
         short A, long beta * B when position = -1
       This is not dollar-neutral by construction unless you normalize notionals;
-      we normalize by (1 + |beta|) to make returns comparable across pairs.
+      we normalise by (1 + |beta|) to make returns comparable across pairs.
     """
     cost_bps: float = 10.0         # 10 bps per unit turnover (both legs combined approx)
     annualisation: int = 252
@@ -38,7 +38,7 @@ def compute_spread_returns(
     beta: float,
 ) -> pd.Series:
     """
-    Compute daily returns of the spread portfolio, *before* applying position.
+    Compute daily returns of the spread portfolio, before applying position.
 
     We approximate a spread portfolio return using log returns:
       r_spread = r_A - beta * r_B
