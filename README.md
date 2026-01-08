@@ -6,7 +6,7 @@ A **statistical arbitrage framework** designed to study **mean-reversion robustn
 
 ## Project Overview
 
-This project implements a full pairs trading pipeline with an emphasis on **realistic deployment constraints** rather than in-sample performance optimisation.  
+In This project I implement a full pairs trading pipeline with an emphasis on **realistic deployment constraints** rather than in-sample performance optimisation.  
 The objective is not to maximise Sharpe in hindsight, but to understand **when and why relative-value signals work and when they break**.
 
 ---
