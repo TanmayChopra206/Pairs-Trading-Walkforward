@@ -11,4 +11,4 @@ data/cache/
 *.csv
 
 # OS
-.DS_Stor
+.DS_Store
