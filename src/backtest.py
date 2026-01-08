@@ -187,8 +187,6 @@ def extract_trades(position: pd.Series) -> pd.DataFrame:
     """
     Very simple trade extraction from a position series in {-1,0,+1}.
     Returns a dataframe with entry/exit dates and direction.
-
-    Note: P&L attribution per trade is often trickier; this is a learning helper.
     """
     pos = position.fillna(0).astype(int)
     changes = pos.diff().fillna(pos)
